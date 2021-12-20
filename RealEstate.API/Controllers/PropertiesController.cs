@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using RealEstate.Features.DTOs.Properties;
 using RealEstate.Features.Properties.Requests.Queries;
+using RealEstate.Features.DTOs.Common;
 
 namespace RealEstate.API.Controllers
 {
@@ -17,7 +18,7 @@ namespace RealEstate.API.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet]
+        [HttpPost]
         public async Task<IActionResult> GetPropertiesAsync(PageListDTO model)
         {
             return Ok(await _mediator.Send(new GetPropertiesListRequest { page = model.Page, pageSize = model.PageSize }));

@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using RealEstate.Models.Common;
 
 namespace RealEstate.Models.Extensions
 {
@@ -15,7 +14,6 @@ namespace RealEstate.Models.Extensions
             int pageSize)
             where TModel : class
         {
-
             var paged = new PagedModel<TModel>();
 
             page = (page < 0) ? 1 : page;
@@ -23,7 +21,7 @@ namespace RealEstate.Models.Extensions
             paged.CurrentPage = page;
             paged.PageSize = pageSize;
 
-            var totalItemsCountTask = query.CountAsync();
+            var totalItemsCountTask = await query.CountAsync();
 
             var startRow = (page - 1) * pageSize;
             paged.Items = await query
@@ -31,7 +29,7 @@ namespace RealEstate.Models.Extensions
                        .Take(pageSize)
                        .ToListAsync();
 
-            paged.TotalItems = await totalItemsCountTask;
+            paged.TotalItems = totalItemsCountTask;
             paged.TotalPages = (int)Math.Ceiling(paged.TotalItems / (double)pageSize);
 
             return paged;

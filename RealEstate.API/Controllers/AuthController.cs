@@ -16,6 +16,7 @@ namespace RealEstate.API.Controllers
             _authService = authService;
         }
 
+        [HttpPost("login")]
         public async Task<IActionResult> Login(AuthRequest request)
         {
             if (!ModelState.IsValid)
@@ -26,6 +27,7 @@ namespace RealEstate.API.Controllers
             return Ok(await this._authService.Login(request));
         }
 
+        [HttpPost("register")]
         public async Task<IActionResult> Register(RegistrationRequest request)
         {
             if (!ModelState.IsValid)

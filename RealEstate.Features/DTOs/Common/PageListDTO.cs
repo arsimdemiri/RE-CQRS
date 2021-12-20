@@ -1,4 +1,4 @@
-﻿namespace RealEstate.Features.DTOs.Properties
+﻿namespace RealEstate.Features.DTOs.Common
 {
     public class PageListDTO
     {

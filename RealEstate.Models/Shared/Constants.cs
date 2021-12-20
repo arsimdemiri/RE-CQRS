@@ -11,6 +11,10 @@ namespace RealEstate.Models.Shared
         public static class CustomClaimTypes
         {
             public const string Uid = "uid";
+            
         }
+
+        public const int MaxPageSize = 100;
+
     }
 }

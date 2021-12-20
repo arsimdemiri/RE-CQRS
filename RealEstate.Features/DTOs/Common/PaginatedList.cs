@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace RealEstate.Features.DTOs.Properties
+namespace RealEstate.Features.DTOs.Common
 {
-    public class PropertyPaginatedList
+    public class PaginatedList<T>
     {
         public int CurrentPage { get; init; }
 
@@ -10,6 +10,6 @@ namespace RealEstate.Features.DTOs.Properties
 
         public int TotalPages { get; init; }
 
-        public List<CreatePropertyDTO> Items { get; init; }
+        public List<T> Items { get; init; }
     }
 }

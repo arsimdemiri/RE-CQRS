@@ -3,8 +3,8 @@ using RealEstate.Features.DTOs.Properties;
 
 namespace RealEstate.Features.Properties.Requests.Commands
 {
-    public class CreatePropertyCommand : IRequest<CreatePropertyDTO>
+    public class CreatePropertyCommand : IRequest<PropertyDTO>
     {
-        public CreatePropertyDTO PropertyViewModel { get; set; }
+        public PropertyDTO PropertyViewModel { get; set; }
     }
 }

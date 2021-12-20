@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace RealEstate.Features.Properties.Handlers.Commands
 {
-    public class CreatePropertyCommandHandler : IRequestHandler<CreatePropertyCommand, CreatePropertyDTO>
+    public class CreatePropertyCommandHandler : IRequestHandler<CreatePropertyCommand, PropertyDTO>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -19,13 +19,13 @@ namespace RealEstate.Features.Properties.Handlers.Commands
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<CreatePropertyDTO> Handle(CreatePropertyCommand request, CancellationToken cancellationToken)
+        public async Task<PropertyDTO> Handle(CreatePropertyCommand request, CancellationToken cancellationToken)
         {
             var itemToAdd = _mapper.Map<Property>(request.PropertyViewModel);
             var addeditem = await _unitOfWork.PropertyRepository.Add(itemToAdd);
             await _unitOfWork.Save();
 
-            return _mapper.Map<CreatePropertyDTO>(addeditem);
+            return _mapper.Map<PropertyDTO>(addeditem);
         }
     }
 }

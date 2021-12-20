@@ -1,19 +1,19 @@
-﻿using System;
+﻿using RealEstate.Models.Shared;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RealEstate.Models
+namespace RealEstate.Models.Common
 {
     public class PagedModel<TModel>
     {
-        const int MaxPageSize = 500;
         private int _pageSize;
         public int PageSize
         {
             get => _pageSize;
-            set => _pageSize = (value > MaxPageSize) ? MaxPageSize : value;
+            set => _pageSize = (value > Constants.MaxPageSize) ? Constants.MaxPageSize : value;
         }
 
         public int CurrentPage { get; set; }

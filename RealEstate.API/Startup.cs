@@ -1,3 +1,4 @@
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,9 +10,14 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RealEstate.Data;
+using RealEstate.Features;
 using RealEstate.Models;
 using RealEstate.Models.Identity;
+using RealEstate.Repository;
+using RealEstate.Services;
 using System;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 
 namespace RealEstate.API
@@ -30,7 +36,6 @@ namespace RealEstate.API
         {
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
             services.AddControllers();
-
             services.AddIdentity<User, Role>(options => {
                 options.Password.RequireDigit = false;
                 options.Password.RequireNonAlphanumeric = false;
@@ -64,12 +69,19 @@ namespace RealEstate.API
                     ClockSkew = TimeSpan.Zero
                 };
             });
-
-            services.AddAutoMapper(typeof(Startup));
+            services.ConfigureFeaturesServices();
+            services.ConfigureRepository();
+            services.ServicesRegistration();
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "RealEstate.API", Version = "v1" });
+                //c.SwaggerDoc("v1", new OpenApiInfo { Title = "RealEstate.API", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "RealEstate.API",
+                    Description = "Authentication and Authorization in ASP.NET 5 with JWT and Swagger"
+                });
                 // To Enable authorization using Swagger (JWT)    
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme()
                 {

@@ -1,5 +1,6 @@
 ﻿using RealEstate.Data;
 using RealEstate.Models;
+using RealEstate.Models.Common;
 using RealEstate.Models.Extensions;
 using System;
 using System.Collections.Generic;
@@ -17,9 +18,9 @@ namespace RealEstate.Repository
             _context = context;
         }
 
-        public Task<PagedModel<Property>> PaginatedProperties(int page, int pageSize)
+        public async Task<PagedModel<Property>> PaginatedProperties(int page, int pageSize)
         {
-            return this._context.Properties.PaginateAsync(page, pageSize);
+            return await this._context.Properties.AsQueryable().PaginateAsync(page, pageSize);
         }
     }
 }
