@@ -9,6 +9,7 @@ namespace RealEstate.Repository
     public interface IUnitOfWork : IDisposable
     {
         IPropertyRepository PropertyRepository { get; }
+        IFeatureRepository FeatureRepository { get; }
         Task Save();
     }
 }

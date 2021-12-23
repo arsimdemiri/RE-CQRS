@@ -17,6 +17,8 @@ namespace RealEstate.Data
         public DbSet<PropertyFeatures> PropertyFeatures { get; set; }
         public DbSet<PropertyType> PropertyTypes { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<File> Files { get; set; }
+        public DbSet<PropertyDocument> PropertyDocuments { get; set; }
 
         public RealEstateDbContext(DbContextOptions<RealEstateDbContext> options) : base(options) {
         }

@@ -13,6 +13,7 @@ namespace RealEstate.Repository
         private readonly RealEstateDbContext _context;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private IPropertyRepository _propertyRepository;
+        private IFeatureRepository _featureRepository;
         public UnitOfWork(RealEstateDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             this._context = context;
@@ -20,6 +21,9 @@ namespace RealEstate.Repository
         }
         public IPropertyRepository PropertyRepository =>
             _propertyRepository ??= new PropertyRepository(_context);
+
+        public IFeatureRepository FeatureRepository =>
+            _featureRepository ??= new FeatureRepository(_context);
 
         public void Dispose()
         {

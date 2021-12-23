@@ -14,8 +14,4 @@
     <ProjectReference Include="..\RealEstate.Repository\RealEstate.Repository.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTOs\Properties\Validators\" />
-  </ItemGroup>
-
 </Project>

@@ -8,8 +8,10 @@ namespace RealEstate.Features.Profiles
     {
         public PropertyProfile()
         {
-            CreateMap<Property, PropertyDTO>().ReverseMap();
+            CreateMap<Property, CreatePropertyDTO>().ReverseMap();
             CreateMap<Property, PropertyListDTO>();
+            CreateMap<Property, PropertyDetailsDTO>()
+                .ForMember(x => x.PropertyType, o => o.MapFrom(x => x.PropertyType.Name));
         }
     }
 }

@@ -14,6 +14,7 @@ namespace RealEstate.Repository
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IPropertyRepository, PropertyRepository>();
+            services.AddScoped<IFeatureRepository, FeatureRepository>();
 
             return services;
         }

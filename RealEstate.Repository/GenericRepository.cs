@@ -39,7 +39,7 @@ namespace RealEstate.Repository
             return await _context.Set<T>().FindAsync(id);
         }
 
-        public async Task<IReadOnlyList<T>> GetAll()
+        public async Task<List<T>> GetAll()
         {
             return await _context.Set<T>().ToListAsync();
         }
