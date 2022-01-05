@@ -1,4 +1,4 @@
-﻿namespace RealEstate.Models.Identity
+﻿namespace RealEstate.Features.DTOs.Identity
 {
     public class JwtSettings
     {

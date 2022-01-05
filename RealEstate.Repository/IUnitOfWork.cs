@@ -10,6 +10,7 @@ namespace RealEstate.Repository
     {
         IPropertyRepository PropertyRepository { get; }
         IFeatureRepository FeatureRepository { get; }
+        IRefreshTokenRepository RefreshTokenRepository { get; }
         Task Save();
     }
 }

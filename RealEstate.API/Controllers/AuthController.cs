@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RealEstate.Models.Identity;
-using RealEstate.Services;
+using RealEstate.Features.Authentication.Requests.Commands;
+using RealEstate.Features.Authentication.Requests.Queries;
+using RealEstate.Features.DTOs.Identity;
 using System.Threading.Tasks;
 
 namespace RealEstate.API.Controllers
@@ -10,32 +11,28 @@ namespace RealEstate.API.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IAuthService _authService;
-        public AuthController(IAuthService authService)
+        private readonly IMediator _mediator;
+        public AuthController(IMediator mediator)
         {
-            _authService = authService;
+            _mediator = mediator;
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(AuthRequest request)
+        public async Task<IActionResult> Login(AuthRequest model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(request);
-            }
-
-            return Ok(await this._authService.Login(request));
+            return Ok(await _mediator.Send(new LoginRequest() { LoginModel = model }));
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegistrationRequest request)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(request);
-            }
+            return Ok(await _mediator.Send(new RegisterUserCommand() { Model = request }));
+        }
 
-            return Ok(await this._authService.Register(request));
+        [HttpPost("refreshtoken")]
+        public async Task<IActionResult> RefreshToken(TokenRequest model) 
+        {
+            return Ok(await _mediator.Send(new VerifyAndGenerateTokenCommand() { TokenRequest = model}));
         }
     }
 }

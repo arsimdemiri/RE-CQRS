@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RealEstate.Models.Identity
+namespace RealEstate.Features.DTOs.Identity
 {
     public class AuthResponse
     {
@@ -12,5 +12,6 @@ namespace RealEstate.Models.Identity
         public string UserName { get; set; }
         public string Email { get; set; }
         public string Token { get; set; }
+        public string RefreshToken { get; set; }
     }
 }

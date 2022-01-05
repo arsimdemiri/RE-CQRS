@@ -19,7 +19,6 @@
     <ProjectReference Include="..\RealEstate.Data\RealEstate.Data.csproj" />
     <ProjectReference Include="..\RealEstate.Features\RealEstate.Features.csproj" />
     <ProjectReference Include="..\RealEstate.Models\RealEstate.Models.csproj" />
-    <ProjectReference Include="..\RealEstate.Services\RealEstate.Services.csproj" />
   </ItemGroup>
 
 </Project>

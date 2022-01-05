@@ -19,6 +19,7 @@ namespace RealEstate.Data
         public DbSet<Address> Addresses { get; set; }
         public DbSet<File> Files { get; set; }
         public DbSet<PropertyDocument> PropertyDocuments { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public RealEstateDbContext(DbContextOptions<RealEstateDbContext> options) : base(options) {
         }

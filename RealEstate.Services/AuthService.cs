@@ -1,8 +1,10 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using RealEstate.Data;
 using RealEstate.Models;
 using RealEstate.Models.Identity;
+using RealEstate.Repository;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -18,15 +20,19 @@ namespace RealEstate.Services
     {
         private readonly UserManager<User> _userManager;
         private readonly JwtSettings _jwtSettings;
+        private readonly TokenValidationParameters _tokenValidationParameters;
+        private readonly IUnitOfWork _unitOfWork;
         public AuthService(UserManager<User> userManager,
-            IOptions<JwtSettings> jwtSettings)
+            IOptions<JwtSettings> jwtSettings, TokenValidationParameters tokenValidationParameters, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _jwtSettings = jwtSettings.Value;
+            _tokenValidationParameters = tokenValidationParameters;
+            _unitOfWork = unitOfWork;
         }
         public async Task<AuthResponse> Login(AuthRequest request)
         {
-            var user = await _userManager.FindByEmailAsync(request.Username);
+            var user = await _userManager.FindByNameAsync(request.Username);
 
             if (user == null)
             {
@@ -40,15 +46,15 @@ namespace RealEstate.Services
                 throw new Exception($"Credentials for '{request.Username} aren't valid'.");
             }
 
-            JwtSecurityToken jwtSecurityToken = await GenerateToken(user);
+            var response = await GenerateToken(user);
 
-            AuthResponse response = new AuthResponse
-            {
-                Id = user.Id.ToString(),
-                Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
-                Email = user.Email,
-                UserName = user.UserName
-            };
+            //AuthResponse response = new AuthResponse
+            //{
+            //    Id = user.Id.ToString(),
+            //    Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+            //    Email = user.Email,
+            //    UserName = user.UserName
+            //};
 
             return response;
         }
@@ -92,7 +98,7 @@ namespace RealEstate.Services
             }
         }
 
-        private async Task<JwtSecurityToken> GenerateToken(User user)
+        private async Task<AuthResponse> GenerateToken(User user)
         {
             var userClaims = await _userManager.GetClaimsAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
@@ -119,9 +125,39 @@ namespace RealEstate.Services
 
             var jwtSecurityToken = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
+                //expires: DateTime.UtcNow.AddMinutes(_jwtSettings.DurationInMinutes),
+                expires: DateTime.UtcNow.AddSeconds(30),
                 signingCredentials: signingCredentials);
-            return jwtSecurityToken;
+
+            var refreshToken = new RefreshToken()
+            {
+                JwtId = jwtSecurityToken.Id,
+                IsUsed = false,
+                IsRevoked = false,
+                UserId = user.Id,
+                ExpiryDate = DateTime.UtcNow.AddMonths(6),
+                Token = RandomString(30) + Guid.NewGuid()
+            };
+            await _unitOfWork.RefreshTokenRepository.Add(refreshToken);
+            await _unitOfWork.Save();
+            return new AuthResponse()
+            {
+                Token = new JwtSecurityTokenHandler().WriteToken(jwtSecurityToken),
+                RefreshToken = refreshToken.Token,
+                Email = user.Email,
+                UserName = user.UserName,
+                Id = user.Id.ToString()
+
+            };
+        }
+
+        private string RandomString(int length)
+        {
+            var random = new Random();
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                        .Select(s => s[random.Next(s.Length)]).ToArray());
+
         }
     }
 }

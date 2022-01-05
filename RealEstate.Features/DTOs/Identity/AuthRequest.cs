@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RealEstate.Models.Identity
+namespace RealEstate.Features.DTOs.Identity
 {
     public class AuthRequest
     {

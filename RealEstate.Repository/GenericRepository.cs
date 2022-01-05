@@ -19,13 +19,15 @@ namespace RealEstate.Repository
         }
         public async Task<T> Add(T entity)
         {
-            await _context.AddAsync(entity);
+            await _context.Set<T>().AddAsync(entity);
             return entity;
         }
 
-        public async Task Delete(T entity)
+        public Task<bool> Delete(T entity)
         {
             _context.Set<T>().Remove(entity);
+
+            return Task.FromResult(true);
         }
 
         public async Task<bool> Exists(Guid id)
@@ -44,9 +46,11 @@ namespace RealEstate.Repository
             return await _context.Set<T>().ToListAsync();
         }
 
-        public async Task Update(T entity)
+        public Task<bool> Update(T entity)
         {
-            _context.Entry(entity).State = EntityState.Modified;
+            _context.Set<T>().Update(entity);
+
+            return Task.FromResult(true);
         }
     }
 }

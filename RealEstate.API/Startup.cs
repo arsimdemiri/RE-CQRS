@@ -1,4 +1,3 @@
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,13 +11,10 @@ using Microsoft.OpenApi.Models;
 using RealEstate.API.Middleware;
 using RealEstate.Data;
 using RealEstate.Features;
+using RealEstate.Features.DTOs.Identity;
 using RealEstate.Models;
-using RealEstate.Models.Identity;
 using RealEstate.Repository;
-using RealEstate.Services;
 using System;
-using System.Linq;
-using System.Reflection;
 using System.Text;
 
 namespace RealEstate.API
@@ -51,28 +47,30 @@ namespace RealEstate.API
             services.AddDbContext<RealEstateDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            var tokenValidationParams = new TokenValidationParameters()
+            {
+                ValidateIssuerSigningKey = true,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                //ValidAudience = Configuration["Jwt:ValidAudience"],
+                //ValidIssuer = Configuration["Jwt:ValidIssuer"],
+                ValidateLifetime = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSettings:Key"])),
+                //ClockSkew = TimeSpan.Zero,
+                RequireExpirationTime = false
+            };
+            services.AddSingleton(tokenValidationParams);
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            }).AddJwtBearer(options =>
-            {
+            }).AddJwtBearer(options =>            {
                 options.SaveToken = true;
-                options.RequireHttpsMetadata = false;
-                options.TokenValidationParameters = new TokenValidationParameters()
-                {
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidAudience = Configuration["Jwt:ValidAudience"],
-                    ValidIssuer = Configuration["Jwt:ValidIssuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Secret"])),
-                    ClockSkew = TimeSpan.Zero
-                };
+                options.TokenValidationParameters = tokenValidationParams;
             });
             services.ConfigureFeaturesServices();
             services.ConfigureRepository();
-            services.ServicesRegistration();
 
             services.AddSwaggerGen(c =>
             {

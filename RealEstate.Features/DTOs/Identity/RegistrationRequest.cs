@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace RealEstate.Models.Identity
+namespace RealEstate.Features.DTOs.Identity
 {
     public class RegistrationRequest
     {
